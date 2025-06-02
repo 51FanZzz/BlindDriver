@@ -1427,7 +1427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!20 &782628376 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 2447775664179839822, guid: a44553f3a291e994dbe64b9d5349e120, type: 3}

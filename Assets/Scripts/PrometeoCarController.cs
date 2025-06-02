@@ -110,7 +110,8 @@ public class PrometeoCarController : MonoBehaviourPun
       public AudioSource carEngineSound; // This variable stores the sound of the car engine.
       public AudioSource tireScreechSound; // This variable stores the sound of the tire screech (when the car is drifting).
       float initialCarEngineSoundPitch; // Used to store the initial pitch of the car engine sound.
-//TODO I ADDED THEM
+      //[Added by Luna]
+      //For brake sound and crash sound
       private AudioClip brakeClip;
       private AudioClip crashClip;
 
@@ -310,13 +311,23 @@ public class PrometeoCarController : MonoBehaviourPun
         }
 
     }
+    //[Added by Luna]
+    //For enabling crashed sound effect when body collide with any obstacles
+    private void OnCollisionEnter(Collision collision) {
+        if (collision.collider.CompareTag("Obstacles")) {
+            if (crashAudioSource != null && crashClip != null && !crashAudioSource.isPlaying) {
+                crashAudioSource.Play();
+                Debug.Log("[Crash Sound] Hit object: " + collision.collider.name);
+            }
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
       //[Added by Luna for car sound effects]
-      // Play brake sound when S (reverse) or Space (handbrake) is pressed
-      if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.Space)) {
+      // Play brake sound when Space (handbrake) is pressed
+      if (Input.GetKeyDown(KeyCode.Space)) {
       if (!brakeAudioSource.isPlaying) brakeAudioSource.Play();
         }
 
@@ -881,12 +892,7 @@ public void CarSounds(){
       }
     }
 
-    //[Added by Luna for car crashing sound effects]
-    private void OnCollisionEnter(Collision collision){
-      if (useSounds && collision.collider.CompareTag("Obstacles")){
-        crashAudioSource.Play();
-        Debug.Log("[Crash Sound] Hit: " + collision.collider.name);
-    }
-    }
+
+    
 }
 
