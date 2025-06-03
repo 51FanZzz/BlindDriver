@@ -17,6 +17,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public GameObject playSceneUI;
 
     private bool isLobbyReady = false;
+    private bool isPlayPressed = false;
 
     void Start()
     {
@@ -33,12 +34,18 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         if (playSceneUI != null)playSceneUI.SetActive(true);
 
         isLobbyReady = false;
+        isPlayPressed = false;
 
     }
 
     public void OnPlayButtonPressed()
     {
+        isPlayPressed = true;
+
+        //When Play button is pressed, only LoadingLobbyUI active until lobby is loaded
         if (playSceneUI != null) playSceneUI.SetActive(false);
+
+        if (RoleSelectionUI != null) RoleSelectionUI.SetActive(false);
 
         if (loadingLobbyUI != null)loadingLobbyUI.SetActive(true);
 
@@ -58,10 +65,10 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         isLobbyReady = true;
 
         // When the lobby is loaded, active LobbyUI and disactivate loadingLobbyUI
-        if(loadingLobbyUI != null)
-            loadingLobbyUI.SetActive(false);
-        if(lobbyUI != null)
-            lobbyUI.SetActive(true);
+        if(loadingLobbyUI != null)  loadingLobbyUI.SetActive(false);
+        if (playSceneUI != null) playSceneUI.SetActive(false);
+
+        if(lobbyUI != null) lobbyUI.SetActive(true);
     }
 
     public void CreateRoom()
@@ -104,11 +111,9 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     {
 
         Debug.Log("JOINED ROOM!");
-        if (RoleSelectionUI != null)
-            RoleSelectionUI.SetActive(true);
+        if (RoleSelectionUI != null)RoleSelectionUI.SetActive(true);
 
-        if (lobbyUI != null)
-            lobbyUI.SetActive(false);
+        if (lobbyUI != null)        lobbyUI.SetActive(false);
     }
 
 
@@ -132,14 +137,14 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     private IEnumerator LeaveRoomRoutine(){
     // Hide all UIs and activate loadingLobbyUI
-        if(RoleSelectionUI != null)
-            RoleSelectionUI.SetActive(false);
-        if(lobbyUI != null)
-            lobbyUI.SetActive(false);
-        if(loadingLobbyUI != null)
-            loadingLobbyUI.SetActive(true);
+        if(RoleSelectionUI != null) RoleSelectionUI.SetActive(false);
+        if(lobbyUI != null)         lobbyUI.SetActive(false);
+        if (playSceneUI != null)    playSceneUI.SetActive(false);
+
+        if(loadingLobbyUI != null)  loadingLobbyUI.SetActive(true);
 
         isLobbyReady = false;
+        isPlayPressed = false;
 
     if (PhotonNetwork.InRoom){
         PhotonNetwork.LeaveRoom();
@@ -182,10 +187,11 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         if (loadingLobbyUI != null)loadingLobbyUI.SetActive(false);
 
         if (playSceneUI != null)playSceneUI.SetActive(true);
+        isPlayPressed = false;
         }
 
         // Back button in SettingsUI to go back to LobbyUI and reconnect to lobby
-        public void BackFromSettings(){
+    public void BackFromSettings(){
         // Hide Settings UI
         if (settingsUI != null)
             settingsUI.SetActive(false);
@@ -199,6 +205,16 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
             Debug.Log("Rejoining Photon lobby...");
             PhotonNetwork.JoinLobby();
         }
+    }
+
+    public void OnExitButton()
+    {
+        Application.Quit();
+
+#if UNITY_EDITOR // quit game in editor as well
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+
     }
 
     

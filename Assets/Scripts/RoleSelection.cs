@@ -23,6 +23,7 @@ public class RoleSelection : MonoBehaviourPunCallbacks
     public GameObject navigatorSelectedIndicator; 
 
     private bool roleSelected = false;
+    private bool gameStarted = false;
 
     void Start(){
         PhotonNetwork.AutomaticallySyncScene = true; //The scene will be synced accoridng to the MasterClient
@@ -91,6 +92,9 @@ public class RoleSelection : MonoBehaviourPunCallbacks
     }
 
     private void CheckIfBothRolesSelectedAndStartGame(){
+        //prevent multiple starts
+        if (gameStarted) return;
+
         bool isDriverSelected = false;
         bool isNavigatorSelected = false;
 
@@ -104,6 +108,7 @@ public class RoleSelection : MonoBehaviourPunCallbacks
         }
         if (PhotonNetwork.CurrentRoom.PlayerCount == 2 && isDriverSelected && isNavigatorSelected){
             if (PhotonNetwork.IsMasterClient){
+                gameStarted = true;
              Debug.Log("Both roles selected. Waiting 0.5s before loading...");
              Invoke("LoadGameScene", 0.5f);  // <- Delay to let roles sync
          }
@@ -121,8 +126,15 @@ public class RoleSelection : MonoBehaviourPunCallbacks
     }
 
     //Check and update current roles status
+    //Clear previous selected roles and reset selections
     public override void OnJoinedRoom(){
         Debug.Log("Room Joined !");
+        if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("PlayerRole"))
+        {
+            Hashtable props = new Hashtable { { "PlayerRole", null } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+            Debug.Log("Resetting old roles on joined room");
+        }
         ResetSelectionIndicators();
         CheckTakenRolesAndUpdateUI();
     }
@@ -131,9 +143,13 @@ public class RoleSelection : MonoBehaviourPunCallbacks
     public void OnBackButtonPressed()
     {
         //Clear chosen roles before leaving the room
-        Hashtable props = new Hashtable{ {"PlayerRole", null} };
-
-        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        //Notify other people as well
+        if (PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("PlayerRole"))
+        {
+            Hashtable props = new Hashtable { { "PlayerRole", null } };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        }
+        
         PhotonNetwork.LeaveRoom();
 
         Debug.Log("Leaving room and resetting role...");
@@ -163,10 +179,25 @@ public class RoleSelection : MonoBehaviourPunCallbacks
 
         ResetSelectionIndicators(); // Reset the visual indicators
 
+        gameStarted = false;
+
         if (roleSelectionUI != null)
             roleSelectionUI.SetActive(false);
 
         if (createJoinUI != null)
             createJoinUI.SetActive(true);
+    }
+
+    private void ResetAllRolesUI()
+    {
+        ResetSelectionIndicators();
+        driverButton.interactable = true;
+        navigatorButton.interactable = true;
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log("A player left the room. Resetting role selection UI.");
+        ResetAllRolesUI();
     }
 }
