@@ -63,7 +63,7 @@ public class PrometeoEditor : Editor{
   private SerializedProperty useSounds;
   private SerializedProperty carEngineSound;
   private SerializedProperty tireScreechSound;
-  
+  //
   //
   //TOUCH CONTROLS VARIABLES
   //
@@ -124,23 +124,9 @@ public class PrometeoEditor : Editor{
 
     SO.Update();
 
-    EditorGUILayout.Space(10);
-    EditorGUILayout.LabelField("CAR SETUP", EditorStyles.boldLabel);
-    EditorGUILayout.Space(10);
-
-    if (useSounds != null)
-    {
-        useSounds.boolValue = EditorGUILayout.BeginToggleGroup("Use sounds (car sounds)?", useSounds.boolValue);
-        GUILayout.Space(10);
-
-        if (carEngineSound != null)
-            EditorGUILayout.PropertyField(carEngineSound, new GUIContent("Car Engine Sound: "));
-
-        if (tireScreechSound != null)
-            EditorGUILayout.PropertyField(tireScreechSound, new GUIContent("Tire Screech Sound: "));
-
-        EditorGUILayout.EndToggleGroup();
-    }
+    GUILayout.Space(25);
+    GUILayout.Label("CAR SETUP", EditorStyles.boldLabel);
+    GUILayout.Space(10);
     //
     //
     //CAR SETUP
@@ -163,10 +149,9 @@ public class PrometeoEditor : Editor{
     //
     //
 
-    EditorGUILayout.Space(10);
-    EditorGUILayout.LabelField("WHEELS", EditorStyles.boldLabel);
-    EditorGUILayout.Space(10);
-
+    GUILayout.Space(25);
+    GUILayout.Label("WHEELS", EditorStyles.boldLabel);
+    GUILayout.Space(10);
 
     EditorGUILayout.PropertyField(frontLeftMesh, new GUIContent("Front Left Mesh: "));
     EditorGUILayout.PropertyField(frontLeftCollider, new GUIContent("Front Left Collider: "));
@@ -186,10 +171,9 @@ public class PrometeoEditor : Editor{
     //
     //
 
-    EditorGUILayout.Space(10);
-    EditorGUILayout.LabelField("EFFECTS", EditorStyles.boldLabel);
-    EditorGUILayout.Space(10);
-
+    GUILayout.Space(25);
+    GUILayout.Label("EFFECTS", EditorStyles.boldLabel);
+    GUILayout.Space(10);
 
     useEffects.boolValue = EditorGUILayout.BeginToggleGroup("Use effects (particle systems)?", useEffects.boolValue);
     GUILayout.Space(10);
@@ -208,10 +192,9 @@ public class PrometeoEditor : Editor{
     //
     //
 
-    EditorGUILayout.Space(10);
-    EditorGUILayout.LabelField("UI", EditorStyles.boldLabel);
-    EditorGUILayout.Space(10);
-
+    GUILayout.Space(25);
+    GUILayout.Label("UI", EditorStyles.boldLabel);
+    GUILayout.Space(10);
 
     useUI.boolValue = EditorGUILayout.BeginToggleGroup("Use UI (Speed text)?", useUI.boolValue);
     GUILayout.Space(10);
@@ -225,23 +208,18 @@ public class PrometeoEditor : Editor{
     //SOUNDS
     //
     //
-    EditorGUILayout.Space(10);
-    EditorGUILayout.LabelField("SOUNDS", EditorStyles.boldLabel);
-    EditorGUILayout.Space(10);
 
+    GUILayout.Space(25);
+    GUILayout.Label("SOUNDS", EditorStyles.boldLabel);
+    GUILayout.Space(10);
 
-    if (useSounds != null && carEngineSound != null && tireScreechSound != null){
-        useSounds.boolValue = EditorGUILayout.BeginToggleGroup("Use sounds (car sounds)?", useSounds.boolValue);
-        GUILayout.Space(10);
+    useSounds.boolValue = EditorGUILayout.BeginToggleGroup("Use sounds (car sounds)?", useSounds.boolValue);
+    GUILayout.Space(10);
 
         EditorGUILayout.PropertyField(carEngineSound, new GUIContent("Car Engine Sound: "));
         EditorGUILayout.PropertyField(tireScreechSound, new GUIContent("Tire Screech Sound: "));
 
-        EditorGUILayout.EndToggleGroup();
-    }
-    else{
-        EditorGUILayout.HelpBox("Missing serialized properties: check that 'useSounds', 'carEngineSound', and 'tireScreechSound' exist in PrometeoCarController.cs", MessageType.Warning);
-    }
+    EditorGUILayout.EndToggleGroup();
 
     //
     //
@@ -249,10 +227,9 @@ public class PrometeoEditor : Editor{
     //
     //
 
-    EditorGUILayout.Space(10);
-    EditorGUILayout.LabelField("TOUCH CONTROLS", EditorStyles.boldLabel);
-    EditorGUILayout.Space(10);
-
+    GUILayout.Space(25);
+    GUILayout.Label("TOUCH CONTROLS", EditorStyles.boldLabel);
+    GUILayout.Space(10);
 
     useTouchControls.boolValue = EditorGUILayout.BeginToggleGroup("Use touch controls (mobile devices)?", useTouchControls.boolValue);
     GUILayout.Space(10);
