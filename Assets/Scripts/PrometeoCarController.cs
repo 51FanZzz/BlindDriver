@@ -8,6 +8,9 @@ P.S: If you need more cars, you can check my other vehicle assets on the Unity A
 something useful for your game. Best regards, Mena.
 */
 
+// Part of this script is added by Luna(which I labeled) specifically for Blind Driver
+// The origional full project can be found on my miro board with a link.
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
